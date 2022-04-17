@@ -162,3 +162,5 @@ const Home: NextPage = () => {
 }
 
 export default Home
+
+// o jaava escripto me odia
