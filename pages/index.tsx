@@ -28,6 +28,15 @@ interface ObjectLiteral {
 
 interface ObjectContent {
   attempt: number
+  complete: boolean
+  0: string
+  1: string
+  2: string
+  3: string
+  4: string
+}
+
+interface ObjectRowLetters {
   0: string
   1: string
   2: string
@@ -40,6 +49,14 @@ const Home: NextPage = () => {
   const [activeRow, setActiveRow] = useState(0)
   const [activeLetter, setActiveLetter] = useState(0)
   const [rowContent, setRowContent] = useState<ObjectContent[]>([])
+
+  const answer = 
+  [
+    ["l", "e", "t", "r", "a"], 
+    ["n", "a", "v", "i", "o"],
+    ["c", "u", "r", "t", "e"],
+    ["a", "v", "i", "a", "o"],
+  ]
   
   const gameModeFormat: ObjectLiteral = {
     single: {numberOfGames: 1, rows: 6},
@@ -47,15 +64,18 @@ const Home: NextPage = () => {
     quad: {numberOfGames: 4, rows: 9},
   }
 
-  const rows = useCallback(() => {
+  const rows = useCallback((gameAnswer:Array<string>) => {
     const rows = []
     for(let i = 0; i < gameModeFormat[gameMode].rows; i++) {
       rows.push(
         <GameRow
           key={i}
-          activeRow={activeRow === i}
+          rowNumber={i}
+          activeRow={activeRow}
           activeLetter={activeLetter}
+          setActiveLetter={setActiveLetter}
           content={rowContent[i]}
+          answer={gameAnswer}
         />
       )
     }
@@ -67,7 +87,7 @@ const Home: NextPage = () => {
     for (let i = 0; i < gameModeFormat[gameMode].numberOfGames; i++) {
       games.push(
         <Termo key={i}>
-          {rows()}
+          {rows(answer[i])}
         </Termo>
       )
     }
@@ -75,9 +95,26 @@ const Home: NextPage = () => {
   }, [gameModeFormat, gameMode, rows])
 
   function handleWordMovement(target:number) {
-    if(target > 4) return setActiveLetter(0)
-    if(target < 0) return setActiveLetter(4)
+    if(target > 5) setActiveLetter(0)
+    if(target < 0 || target > 4) return 
     setActiveLetter(target)
+  }
+
+  function handleIndexMovement() {
+    const [activeRowContent] = rowContent.filter((row) => row.attempt === activeRow)
+    const {attempt, complete, ...rowLetters} = activeRowContent || {}
+    const rowLettersArray = Object.values(rowLetters)
+    // Procurando o próximo index que está vazio começando com a posição ativa
+    const nextEmptyLetter = rowLettersArray.findIndex((letter, index) => {
+      if(activeLetter < 4) return letter === "" && index > activeLetter
+      // Sinceramente eu ainda não entendi a lógica disso funcionar, mas se funciona a gente não mexe
+      if(activeLetter === 4 && index === 4) return false
+      return letter === ""
+    }
+    );
+    // Se o array de letras estiver cheio a posição de letras vazias é -1 então seta a palavra como completa
+    if(rowLettersArray.length > 0 && nextEmptyLetter === -1) return setActiveLetter(5)
+    if(nextEmptyLetter > -1) setActiveLetter(nextEmptyLetter)
   }
 
   function handleWriteLetter(keyboardInput:string) {    
@@ -96,6 +133,8 @@ const Home: NextPage = () => {
     const newRowContent = rowContent.map((row) => 
       {
         if(row.attempt === activeRow) {
+          // se tiver letra na posição ativa, apaga, ou se a posição ativa for 0 mantém
+          // senão apaga a anterior e o useEffect vai mover um para trás
           return {...row, [letter || activeLetter === 0 ? activeLetter : activeLetter - 1]: ""}
         }
         return row
@@ -105,17 +144,22 @@ const Home: NextPage = () => {
   }
 
   const keyboardActions: ObjectLiteral = {
-    "write": (keyboardInput:string) => {
-      handleWriteLetter(keyboardInput)
-      handleWordMovement(activeLetter + 1)
+    "write": async (keyboardInput:string) => { 
+      if(activeLetter < 5 && activeLetter > -1) {
+        handleWriteLetter(keyboardInput)
+        handleIndexMovement()
+      }
     },
     "Backspace": () => {
-      const letter = rowContent.filter((row) => row.attempt === activeRow)[0][activeLetter as keyof ObjectContent]
+      const [activeRowContent] = rowContent.filter((row) => row.attempt === activeRow)
+      const {attempt, complete, ...rowLetters} = activeRowContent
+      const letter = rowLetters[activeLetter as keyof ObjectRowLetters]
       handleEraseLetter(letter)
       handleWordMovement(activeLetter - 1)
     },
     "Enter": () => {
       console.log('enter');
+      setActiveLetter(0)
       setActiveRow(activeRow + 1)
     },
     "Space": () => {
@@ -144,11 +188,10 @@ const Home: NextPage = () => {
   useEffect(() => {
     const rows = []
     for(let i = 0; i < gameModeFormat[gameMode].rows; i++) {
-      rows.push({ attempt: i, 0: "", 1: "", 2: "", 3: "", 4: "" })
+      rows.push({ attempt: i, 0: "", 1: "", 2: "", 3: "", 4: "", complete: false })
     }
     setRowContent(rows)
   }, [])
-  
 
   return (
     <>

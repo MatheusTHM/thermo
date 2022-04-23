@@ -2,13 +2,17 @@ import React, { useEffect, useState } from 'react'
 import { Row, Letter } from "./styles"
 
 interface Props {
-  activeRow: boolean
+  answer: Array<string>;
+  rowNumber: number;
+  activeRow: number
   activeLetter: number
+  setActiveLetter : Function
   content: ObjectContent
 }
 
 interface ObjectContent {
   attempt: number
+  complete: boolean
   0: string
   1: string
   2: string
@@ -16,15 +20,38 @@ interface ObjectContent {
   4: string
 }
 
-const GameRow:React.FC<Props> = ({ activeRow, activeLetter, content }) => {
+interface ObjectContentLetter {
+  0: string
+  1: string
+  2: string
+  3: string
+  4: string
+}
+
+const GameRow:React.FC<Props> = ({ answer, rowNumber, activeRow, activeLetter, setActiveLetter, content }) => {
   
   const letters = () => {
+    const rowActive = rowNumber === activeRow;
     const letters = []
+    const {attempt, complete, ...contentLetter} = content
+
+    function answerStatus(answer:Array<string>, letter:string, letterIndex:number) {
+      if(letter === answer[letterIndex]) return "right"
+      if(answer.some((answerLetter) =>  answerLetter === letter)) return "place"
+      return "wrong"
+    }
+
     // keys - 1, pois content vem com attempt
-    for(let i = 0; i < Object.keys(content).length - 1; i++) {
+    for(let i = 0; i < 5; i++) {  
       letters.push(
         <Letter 
-          active={activeRow && activeLetter === i}>
+          key={i}
+          active={rowActive && activeLetter === i}
+          activeRow={rowActive}
+          onClick={() => setActiveLetter(i)}
+          sent={activeRow > rowNumber}
+          status={answerStatus(answer, contentLetter[i as keyof ObjectContentLetter], i)}
+          >
           {content[i as keyof ObjectContent]}
         </Letter>
       )
