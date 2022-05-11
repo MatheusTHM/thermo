@@ -8,6 +8,7 @@ interface Props {
   activeLetter: number
   setActiveLetter : Function
   content: ObjectContent
+  gameStatus: Boolean
 }
 
 interface ObjectContent {
@@ -28,8 +29,7 @@ interface ObjectContentLetter {
   4: string
 }
 
-const GameRow:React.FC<Props> = ({ answer, rowNumber, activeRow, activeLetter, setActiveLetter, content }) => {
-  
+const GameRow:React.FC<Props> = ({ answer, rowNumber, activeRow, activeLetter, setActiveLetter, content, gameStatus }) => {
   const letters = () => {
     const rowActive = rowNumber === activeRow;
     const letters = []
@@ -46,8 +46,8 @@ const GameRow:React.FC<Props> = ({ answer, rowNumber, activeRow, activeLetter, s
       letters.push(
         <Letter 
           key={i}
-          active={rowActive && activeLetter === i}
-          activeRow={rowActive}
+          active={!gameStatus && rowActive && activeLetter === i}
+          activeRow={!gameStatus && rowActive}
           onClick={() => setActiveLetter(i)}
           sent={activeRow > rowNumber}
           status={answerStatus(answer, contentLetter[i as keyof ObjectContentLetter], i)}

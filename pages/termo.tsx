@@ -51,19 +51,41 @@ interface ObjectLiteral {
   [key: string]: any;
 }
 
-const Home = () => {
+
+/*
+  A ideia é adicionar os event listeners nos termos
+  enquanto que existe uma palavra exemplo sendo montada nessa tela
+  cada  termo vai ter sua palavra e seu conteúdo
+  quando a palavra estiver pronta será 
+    adicionado um true em gameStatus
+  quando não houver mais nenhum false em gameStatus o game acaba
+    
+*/
+
+
+
+const termoTeste = () => {
   const [gameMode, setGameMode] = useState("duo") // single, duo, quad
   const [activeRow, setActiveRow] = useState(0)
   const [activeLetter, setActiveLetter] = useState(0)
   const [letterCompletion, setLetterCompletion] = useState([false, false, false, false, false])
   const [gameStatus, setGameStatus] = useState([false])  
+  // const [gameContent, setGameContent] = useState([{
+  //   attempt: 0,
+  //   complete: false,
+  //   0: '',
+  //   1: '',
+  //   2: '',
+  //   3: '',
+  //   4: '',
+  // }])
 
   const answer = 
   [
-    ["t", "e", "l", "h", "a"], 
-    ["m", "e", "i", "a", "o"],
-    ["f", "a", "t", "o", "r"],
-    ["p", "o", "r", "t", "a"],
+    ["l", "e", "t", "r", "a"], 
+    ["n", "a", "v", "i", "o"],
+    ["c", "u", "r", "t", "e"],
+    ["a", "v", "i", "a", "o"],
   ]
   
   const gameModeFormat: gameModeFormatProps = {
@@ -94,8 +116,9 @@ const Home = () => {
 
 
   const keyboardActions: ObjectLiteral = {
-    "write": async () => { 
+    "write": async (keyboardInput:string) => { 
       if(activeLetter < 5 && activeLetter > -1) {
+        // handleWriteLetter(keyboardInput)
         const letterStatus = [...letterCompletion]
         letterStatus[activeLetter] = true
         setLetterCompletion(letterStatus)
@@ -103,12 +126,17 @@ const Home = () => {
       }
     },
     "Backspace": () => {
+      // const [activeRowContent] = rowContent.filter((row) => row.attempt === activeRow)
+      // const {attempt, complete, ...rowLetters} = activeRowContent
+      // const letter = rowLetters[activeLetter as keyof ObjectRowLetters]
+      // handleEraseLetter(letter)
       const letterStatus = [...letterCompletion]
       letterStatus[activeLetter] = false
       setLetterCompletion(letterStatus)
       handleWordMovement(activeLetter - 1)
     },
     "Enter": () => {
+      console.log('enter');
       const resetLetterCompletion = letterCompletion.map(() => false)
       setLetterCompletion(resetLetterCompletion)
       setActiveLetter(0)
@@ -118,6 +146,7 @@ const Home = () => {
       const letterStatus = [...letterCompletion]
       letterStatus[activeLetter] = false 
       setLetterCompletion(letterStatus)
+      // handleWriteLetter("")
       handleWordMovement(activeLetter + 1)
     },
     "ArrowLeft": () => {
@@ -158,23 +187,33 @@ const Home = () => {
         <Termo
           key={i}
           answer={answer[i]}
+          // activeRow={activeRow}
           activeLetter={activeLetter}
           setActiveLetter={setActiveLetter}
           gameFormat={gameModeFormat[gameMode]}
           gameStatus={gameStatus}
           setGameStatus={setGameStatus}
           gameNumber={i}
+          // setActiveRow={setActiveRow}
+          // gameContent={gameContent}
         />
       ) 
     }
     return termos     
-  }, [answer, gameMode])
+  }, [answer, gameMode
+    // , gameContent
+  ])
   
 
   return (
     <>
+    {/* Essas outras coisas devem ser retiradas
+        Aqui deve ficar somente o jogo
+        Esses elementos estão aqui para testes
+    */}
       <NavBar/>
       <GameContainer>
+        {/* {games()} */}
         {gamesGenerator()}
       </GameContainer>
       {/* Keyboard */}
@@ -183,4 +222,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default termoTeste
