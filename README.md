@@ -1,34 +1,37 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<p align="center">
+ <img width="200px" src="/public/Thermo.png" align="center" alt="THermo" />
+ <h2 align="center">THermo</h2>
+ <p align="center">Find the term!</p>
+</p>
+
+## What is it?
+
+Hi there! 
+In this project I've re-created a loved game <a href="term.ooo">Termo</a>.
+This game consists of a player tryng to find the word o the day. Inspired by <a href="https://www.nytimes.com/games/wordle/index.html">Wordle</a>.
+Besides cloning the game I've been changing it's feature to improve this beloved game! 
 
 ## Getting Started
 
-First, run the development server:
+To run this game o just have to clone the repository and install it's dependencies
+This game was building using nextJS, Styled-components.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## State of the Game
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<p align="center">
+ <img src="/public/gameplay.jpg" align="center" alt="THermo" />
+</p>
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Future Plans
+- [ ] Defeat Popup
+- [ ] Keep user tries in the localStorage
+- [ ] Add a header for change o gameplay (solo, duo, quad)
+- [ ] Add keyboard where the user can visualize which keys have been used
+- [ ] Automate term, getting the word from an array or API
+- [ ] Infinite Game. User is able to keep playing the game after a win or lose
+- [ ] Keep a scoreboard of the games played by the user
+- [ ] Info page. Who am I? What is this game?
+- [ ] Guide modal. How to play this game
+- [ ] Improve our congratulations modal
+- [ ] Improve the game responsivity
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
