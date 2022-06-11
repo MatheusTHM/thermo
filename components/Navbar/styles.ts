@@ -15,7 +15,9 @@ export const Navbar = styled.nav`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 60px;
+  /* height: 60px; */
+  height: 8vh;
+  padding-top: 1rem;
 `
 interface NavButtonProps {
   isActive: boolean
@@ -25,6 +27,8 @@ export const NavButton = styled.button<NavButtonProps>`
   width: 27.5px;
   height: 27.5px;
   font: inherit;
+  font-size: 1.5vh;
+  line-height: 0;
   border: 2px solid ${props => props.theme.colorOffWhite};
   border-radius: 4px;
   color: ${props => props.theme.colorOffWhite};

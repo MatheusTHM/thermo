@@ -1,4 +1,5 @@
 import type { NextPage } from 'next'
+import GameRow from '../components/GameRow'
 import styled from 'styled-components'
 import { useCallback, useEffect, useState } from 'react'
 import { useEventListener } from '../util/useEventListener'
@@ -42,11 +43,8 @@ const GameContainer = styled.main<GameContainerProps>`
   justify-content: center;
   flex-wrap: wrap;
   width: 90%;
-  height: ${props => `calc(70vh - ${props.openHeader ? "7vh" : "0px"})`}; 
-  /* height: ${props => `calc(100vh - ${props.openHeader ? "64px - 1rem" : "0px"} - 60px - 25.2vh)`}; // 100vh - height of the HeaderMenu - height of the navbar - height of the keyboard */
+  height: ${props => props.openHeader ? "calc(100vh - 64px - 60px - 100px)" : "calc(100vh - 0px - 60px - 100px)" }; // 100vh - height of the HeaderMenu - height of the navbar - height of the keyboard
   margin: auto;
-  transition: height 0.5s ease-in-out;
-  overflow: auto;
 
   @media(max-width: 670px) {
     max-width: 400px;
@@ -58,43 +56,9 @@ const GameContainer = styled.main<GameContainerProps>`
 `
 
 const Keyboard = styled.div`
-  display: grid;
-  grid-template-rows: repeat(3, 1fr);
-  grid-template-columns: repeat(32, 1fr);
-  grid-gap: .5rem;
-  max-width: 720px;
-  height: 21.5vh;
-  margin: 0 auto;
-  padding: 1rem;
-  > button {
-    grid-column: span 3;
-    font: inherit;
-    font-size: 2rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    padding: .5rem;
-    border: none;
-    border-radius: 4px;
-    color: ${props => props.theme.colorText};
-    background-color: ${props => props.theme.colorBorder};
-    transition: all .05s ease-in-out;
-    cursor: pointer;
-    &:hover {
-      transform: scale(1.05);
-    }
-    &:nth-child(11) {
-      grid-column: 2 / span 3;
-    }
-    &:nth-child(20) {
-      grid-column: 30 / span 3;
-    }
-    &:nth-child(21) {
-      grid-column: 3 / span 3;
-    }
-    &:nth-child(28) {
-      grid-column: 25 / span 8;
-    }
-  }
+  width: 100%;
+  height: 100px;
+  background-color: ${props => props.theme.colorLetter};
 `
 
 interface gameModeFormatProps {
@@ -102,16 +66,6 @@ interface gameModeFormatProps {
     numberOfGames: number
     rows: number
   }
-}
-
-interface ObjectContent {
-  attempt: number
-  complete: boolean
-  0: string
-  1: string
-  2: string
-  3: string
-  4: string
 }
 
 interface ObjectLiteral {
@@ -126,14 +80,13 @@ interface ObjectLiteral {
   quando não houver mais nenhum false em gameStatus o game acaba
 */
 
-const Home: NextPage = () => {
+const termoTeste = () => {
   const [gameMode, setGameMode] = useState("quad") // single, duo, quad
   const [openHeader, setOpenHeader] = useState(false)
   const [activeRow, setActiveRow] = useState(0)
   const [activeLetter, setActiveLetter] = useState(0)
   const [letterCompletion, setLetterCompletion] = useState([false, false, false, false, false])
   const [gameStatus, setGameStatus] = useState([false])  
-  const [keyboardAction, setKeyboardAction] = useState("")  
   // const [gameContent, setGameContent] = useState([{
   //   attempt: 0,
   //   complete: false,
@@ -177,26 +130,12 @@ const Home: NextPage = () => {
     if(nextEmptyLetter > -1) setActiveLetter(nextEmptyLetter)
   }
 
-  function handleKeyboardPress(keyboardInput:string) {
-    // Sem o timeout essas funções acontecem simultaneamente
-    // Fazendo com queo movimento entre as letras aconteça antes da escrita
-    // Todo - encontrar uma forma de trocar o setTimeout por algo melhor
-    if(keyboardInput === "Backspace" || keyboardInput === "Enter") {
-      setKeyboardAction(keyboardInput)
-      setTimeout(() => { keyboardActions[keyboardInput]() }, 10)
-      return 
-    }
-    setKeyboardAction(keyboardInput)
-    setTimeout(() => { keyboardActions.write() }, 10)
-    return 
-  }
 
 
   const keyboardActions: ObjectLiteral = {
-    "write": async () => { 
-      console.log({activeLetter});
-      
+    "write": async (keyboardInput:string) => { 
       if(activeLetter < 5 && activeLetter > -1) {
+        // handleWriteLetter(keyboardInput)
         const letterStatus = [...letterCompletion]
         letterStatus[activeLetter] = true
         setLetterCompletion(letterStatus)
@@ -204,12 +143,17 @@ const Home: NextPage = () => {
       }
     },
     "Backspace": () => {
+      // const [activeRowContent] = rowContent.filter((row) => row.attempt === activeRow)
+      // const {attempt, complete, ...rowLetters} = activeRowContent
+      // const letter = rowLetters[activeLetter as keyof ObjectRowLetters]
+      // handleEraseLetter(letter)
       const letterStatus = [...letterCompletion]
       letterStatus[activeLetter] = false
       setLetterCompletion(letterStatus)
       handleWordMovement(activeLetter - 1)
     },
     "Enter": () => {
+      console.log('enter');
       const resetLetterCompletion = letterCompletion.map(() => false)
       setLetterCompletion(resetLetterCompletion)
       setActiveLetter(0)
@@ -219,6 +163,7 @@ const Home: NextPage = () => {
       const letterStatus = [...letterCompletion]
       letterStatus[activeLetter] = false 
       setLetterCompletion(letterStatus)
+      // handleWriteLetter("")
       handleWordMovement(activeLetter + 1)
     },
     "ArrowLeft": () => {
@@ -266,8 +211,6 @@ const Home: NextPage = () => {
           gameStatus={gameStatus}
           setGameStatus={setGameStatus}
           gameNumber={i}
-          keyboardAction={keyboardAction}
-          setKeyboardAction={setKeyboardAction}
           // setActiveRow={setActiveRow}
           // gameContent={gameContent}
         />
@@ -287,38 +230,11 @@ const Home: NextPage = () => {
         {gamesGenerator()}
       </GameContainer>
       <Keyboard>
-        <button onClick={() => handleKeyboardPress("q")}> q </button>
-        <button onClick={() => handleKeyboardPress("w")}> w </button>
-        <button onClick={() => handleKeyboardPress("e")}> e </button>
-        <button onClick={() => handleKeyboardPress("r")}> r </button>
-        <button onClick={() => handleKeyboardPress("t")}> t </button>
-        <button onClick={() => handleKeyboardPress("y")}> y </button>
-        <button onClick={() => handleKeyboardPress("u")}> u </button>
-        <button onClick={() => handleKeyboardPress("i")}> i </button>
-        <button onClick={() => handleKeyboardPress("o")}> o </button>
-        <button onClick={() => handleKeyboardPress("p")}> p </button>
-        <button onClick={() => handleKeyboardPress("a")}> a </button>
-        <button onClick={() => handleKeyboardPress("s")}> s </button>
-        <button onClick={() => handleKeyboardPress("d")}> d </button>
-        <button onClick={() => handleKeyboardPress("f")}> f </button>
-        <button onClick={() => handleKeyboardPress("g")}> g </button>
-        <button onClick={() => handleKeyboardPress("h")}> h </button>
-        <button onClick={() => handleKeyboardPress("j")}> j </button>
-        <button onClick={() => handleKeyboardPress("k")}> k </button>
-        <button onClick={() => handleKeyboardPress("l")}> l </button>
-        <button onClick={() => handleKeyboardPress("Backspace")}> {"<"} </button>
-        <button onClick={() => handleKeyboardPress("z")}> z </button>
-        <button onClick={() => handleKeyboardPress("x")}> x </button>
-        <button onClick={() => handleKeyboardPress("c")}> c </button>
-        <button onClick={() => handleKeyboardPress("v")}> v </button>
-        <button onClick={() => handleKeyboardPress("b")}> b </button>
-        <button onClick={() => handleKeyboardPress("n")}> n </button>
-        <button onClick={() => handleKeyboardPress("m")}> m </button>
-        <button onClick={() => handleKeyboardPress("Enter")}> Enter </button>
+        abcdefghijklmnopqrstuvwxyz
       </Keyboard>
       <Modal status={!gameStatus.some((el) => el === false )}><div>Parabéns</div></Modal>
     </>
   )
 }
 
-export default Home
+export default termoTeste

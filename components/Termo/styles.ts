@@ -5,8 +5,10 @@ export const TermoContainer = styled.article`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 330px;
-  margin: 0 auto;
+  margin: 0 auto 1rem;
+  @media screen and (max-width: 660px) {
+    width: 45%;
+  }
 `
 
 

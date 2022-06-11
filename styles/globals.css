@@ -19,34 +19,33 @@ body {
   background-color: #6e5c62;
 }
 
-
-@media screen and (min-width: 1000px ) {
+@media screen and (min-width: 1000px) {
   * {
-    font-size: .8vw;
+    font-size: 0.8vw;
   }
 }
 
-@media screen and (max-width: 1000px ) {
+@media screen and (max-width: 1000px) {
   * {
-    font-size: 9px;
+    font-size: 10px;
   }
 }
 
-@media screen and (max-width: 900px ) {
+@media screen and (max-width: 900px) {
   * {
     font-size: 8px;
   }
 }
 
-@media screen and (max-width: 800px ) {
+@media screen and (max-width: 800px) {
   * {
     font-size: 7px;
   }
 }
 
-@media screen and (max-width: 660px ) {
+@media screen and (max-width: 660px) {
   * {
-    font-size: 6.4px;
+    font-size: 5.9px;
   }
 }
 

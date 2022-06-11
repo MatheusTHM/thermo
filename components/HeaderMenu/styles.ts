@@ -9,7 +9,7 @@ export const Header = styled.div<HeaderProps>`
   align-items: center;
   justify-content: center;
   width: 100%;  
-  height: ${props => props.isActive ? "64px" : "0px"};
+  height: ${props => props.isActive ? "7vh" : "0px"};
   overflow: hidden;
   transition: height 0.5s ease-in-out;
   background-color: ${props => props.theme.colorBaseBlack};
