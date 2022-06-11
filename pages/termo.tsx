@@ -1,8 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import type { NextPage } from 'next'
+import GameRow from '../components/GameRow'
 import styled from 'styled-components'
-import NavBar from '../components/Navbar'
-import Termo from '../components/Termo'
+import { useCallback, useEffect, useState } from 'react'
 import { useEventListener } from '../util/useEventListener'
+import NavBar from '../components/Navbar'
+import HeaderMenu from '../components/HeaderMenu'
+import Termo from '../components/Termo'
 
 interface ModalProps {
   status: boolean
@@ -30,14 +33,32 @@ const Modal = styled.div<ModalProps>`
   }
 `
 
-const GameContainer = styled.main`
+interface GameContainerProps {
+  openHeader: boolean
+}
+
+const GameContainer = styled.main<GameContainerProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  // 100vh - height of the navbar - height of the keyboard
-  height: calc(100vh - 60px - 0px);
+  flex-wrap: wrap;
+  width: 90%;
+  height: ${props => props.openHeader ? "calc(100vh - 64px - 60px - 100px)" : "calc(100vh - 0px - 60px - 100px)" }; // 100vh - height of the HeaderMenu - height of the navbar - height of the keyboard
   margin: auto;
+
+  @media(max-width: 670px) {
+    max-width: 400px;
+  }
+
+  @media(max-width: 500px) {
+    width: 100%;
+  }
+`
+
+const Keyboard = styled.div`
+  width: 100%;
+  height: 100px;
+  background-color: ${props => props.theme.colorLetter};
 `
 
 interface gameModeFormatProps {
@@ -51,21 +72,17 @@ interface ObjectLiteral {
   [key: string]: any;
 }
 
-
 /*
   A ideia é adicionar os event listeners nos termos
   enquanto que existe uma palavra exemplo sendo montada nessa tela
-  cada  termo vai ter sua palavra e seu conteúdo
-  quando a palavra estiver pronta será 
-    adicionado um true em gameStatus
+  cada termo vai ter sua palavra e seu conteúdo
+  quando a palavra estiver pronta será adicionado um true em gameStatus
   quando não houver mais nenhum false em gameStatus o game acaba
-    
 */
 
-
-
 const termoTeste = () => {
-  const [gameMode, setGameMode] = useState("duo") // single, duo, quad
+  const [gameMode, setGameMode] = useState("quad") // single, duo, quad
+  const [openHeader, setOpenHeader] = useState(false)
   const [activeRow, setActiveRow] = useState(0)
   const [activeLetter, setActiveLetter] = useState(0)
   const [letterCompletion, setLetterCompletion] = useState([false, false, false, false, false])
@@ -207,16 +224,14 @@ const termoTeste = () => {
 
   return (
     <>
-    {/* Essas outras coisas devem ser retiradas
-        Aqui deve ficar somente o jogo
-        Esses elementos estão aqui para testes
-    */}
-      <NavBar/>
-      <GameContainer>
-        {/* {games()} */}
+      <HeaderMenu gameMode={gameMode} setGameMode={setGameMode} openHeader={openHeader}/>
+      <NavBar setOpenHeader={setOpenHeader} openHeader={openHeader} />
+      <GameContainer openHeader={openHeader}>
         {gamesGenerator()}
       </GameContainer>
-      {/* Keyboard */}
+      <Keyboard>
+        abcdefghijklmnopqrstuvwxyz
+      </Keyboard>
       <Modal status={!gameStatus.some((el) => el === false )}><div>Parabéns</div></Modal>
     </>
   )

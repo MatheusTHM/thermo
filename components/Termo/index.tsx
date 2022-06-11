@@ -14,11 +14,13 @@ interface Props {
   // activeRow: number
   activeLetter: number
   gameNumber: number
-  gameStatus: Array<Boolean>
+  gameStatus: Array<boolean>
   setActiveLetter: Function
   setGameStatus: Function
   // setActiveRow: Function
   // gameContent: Array<any>
+  keyboardAction: string
+  setKeyboardAction: Function
 }
 
 interface ObjectLiteral {
@@ -43,7 +45,7 @@ interface ObjectRowLetters {
   4: string
 }
   
-const Termo:React.FC<Props> = ({ activeLetter, setActiveLetter, gameStatus, setGameStatus, gameFormat, gameNumber, answer}) => {
+const Termo:React.FC<Props> = ({ activeLetter, setActiveLetter, gameStatus, setGameStatus, gameFormat, gameNumber, answer, keyboardAction, setKeyboardAction }) => {
   const [activeRow, setActiveRow] = useState(0)
   const [rowContent, setRowContent] = useState<ObjectContent[]>([{
     attempt: 0,
@@ -109,7 +111,6 @@ const Termo:React.FC<Props> = ({ activeLetter, setActiveLetter, gameStatus, setG
       handleEraseLetter(letter)
     },
     "Enter": () => {
-      console.log('enter');
       verifyAnswer()
       setActiveLetter(0)
       setActiveRow(activeRow + 1)
@@ -159,6 +160,20 @@ const Termo:React.FC<Props> = ({ activeLetter, setActiveLetter, gameStatus, setG
     }
     setRowContent(rows)
   }, [])
+
+  useEffect(() => {
+    console.log({keyboardAction});
+    
+    if(!keyboardAction) return 
+    if(keyboardAction === "Backspace" || keyboardAction === "Enter") {
+      keyboardActions[keyboardAction]()
+      setKeyboardAction("")
+      return 
+    }
+    keyboardActions.write(keyboardAction)
+    setKeyboardAction("")
+    return
+  }, [keyboardAction])
 
   return (
     <TermoContainer>    

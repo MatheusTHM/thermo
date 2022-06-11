@@ -15,9 +15,9 @@ export const Row = styled.section`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  height: 63px;
-  margin-bottom: 4px;
+  width: max-content;
+  height: 4rem;
+  margin-bottom: .25rem;
 `
 
 const result:resultProps = {
@@ -27,24 +27,26 @@ const result:resultProps = {
 }
 
 export const Letter = styled.div<LetterProps>`
-  width: 63px;
-  height: 63px;
+  width: 4rem;
+  height: 4rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: .4rem;
   font-weight: 600;
-  font-size: 35px;
+  font-size: 2rem;
   text-transform: uppercase;
   color: ${props => props.theme.colorText};
-  border: 4px solid ${props => props.theme.colorBorder};
-  border-bottom: ${props => props.active && `10px solid ${props.theme.colorBorder}`};
-  margin-bottom: ${props => props.active && `-1px`};
+  border: .3rem solid ${props => props.theme.colorBorder};
+  border-bottom: ${props => props.active && `.6rem solid ${props.theme.colorBorder}`};
+  margin-bottom: ${props => props.active && `-.1rem`};
   cursor: ${props => props.activeRow && `pointer`};
   background: ${props => !props.activeRow && props.theme.colorLetter};
   border-color: ${props => !props.activeRow && props.theme.colorLetter};
   background: ${props => props.sent && props.theme[result[props.status]]};
-  border: ${props => props.sent && "none"}
-  
+  border: ${props => props.sent && "none"};
+  :nth-child(n+2) {
+    margin-left: .25rem;
+  }
 `
 

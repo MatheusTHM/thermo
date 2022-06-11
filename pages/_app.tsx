@@ -11,7 +11,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     colorWrongFG:"#504a4b",
     colorLetter:"#615458",
     colorBorder:"#4C4347",
+    colorOffWhite:"#B7AEB4",
     colorText: "#FAFAFF",
+    colorBaseBlack: "#222",
   };
   return (
     <ThemeProvider theme={theme}>

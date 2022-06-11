@@ -19,6 +19,37 @@ body {
   background-color: #6e5c62;
 }
 
+
+@media screen and (min-width: 1000px ) {
+  * {
+    font-size: .8vw;
+  }
+}
+
+@media screen and (max-width: 1000px ) {
+  * {
+    font-size: 9px;
+  }
+}
+
+@media screen and (max-width: 900px ) {
+  * {
+    font-size: 8px;
+  }
+}
+
+@media screen and (max-width: 800px ) {
+  * {
+    font-size: 7px;
+  }
+}
+
+@media screen and (max-width: 660px ) {
+  * {
+    font-size: 6.4px;
+  }
+}
+
 /* Fontes */
 @font-face {
   font-family: "Mitr";
